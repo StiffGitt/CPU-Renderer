@@ -28,18 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
+            pictureBox = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
-            // Form1
+            // pictureBox
+            // 
+            pictureBox.Dock = DockStyle.Fill;
+            pictureBox.Location = new Point(0, 0);
+            pictureBox.Name = "pictureBox";
+            pictureBox.Size = new Size(984, 561);
+            pictureBox.TabIndex = 0;
+            pictureBox.TabStop = false;
+            // 
+            // Form
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(984, 561);
-            Name = "Form1";
-            Text = "Form1";
+            Controls.Add(pictureBox);
+            Name = "Form";
+            Text = "CPU-Renderer";
+            ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
+
+        private PictureBox pictureBox;
     }
 }

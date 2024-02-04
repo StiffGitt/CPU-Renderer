@@ -5,13 +5,12 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPU_Renderer.Rendering.Model
+namespace CPU_Renderer.Rendering.Models
 {
     public class Cube : Model
     {
         private const int wallTriCount = 10;
         private Color color;
-        private Vector4[] vertices;
         private List<Triangle> mesh;
 
         public Cube(Color color, Vector3 translation, Vector3 scale, Vector3 pivot)
@@ -20,66 +19,11 @@ namespace CPU_Renderer.Rendering.Model
             base.Translation = translation;
             base.Scale = scale;
             base.Pivot = pivot;
-            vertices = new Vector4[8] {
-                new Vector4(0, 0, 0, 1),
-                new Vector4(1, 0, 0, 1),
-                new Vector4(1, 1, 0, 1),
-                new Vector4(0, 1, 0, 1),
-                new Vector4(0, 0, 1, 1),
-                new Vector4(1, 0, 1, 1),
-                new Vector4(1, 1, 1, 1),
-                new Vector4(0, 1, 1, 1),
-            };
+            MakeTriangulation();
         }
 
         private void MakeTriangulation()
         {
-            List<Vector4[]> walls = new List<Vector4[]>()
-            {
-                new Vector4[4]
-                {
-                    new Vector4(0, 0, 0, 1),
-                    new Vector4(1, 0, 0, 1),
-                    new Vector4(1, 1, 0, 1),
-                    new Vector4(0, 1, 0, 1)
-                },
-                new Vector4[4]
-                {
-                    new Vector4(0, 0, 1, 1),
-                    new Vector4(1, 0, 1, 1),
-                    new Vector4(1, 1, 1, 1),
-                    new Vector4(0, 1, 1, 1)
-                },
-                new Vector4[4]
-                {
-                    new Vector4(0, 0, 1, 1),
-                    new Vector4(1, 0, 1, 1),
-                    new Vector4(0, 0, 0, 1),
-                    new Vector4(1, 0, 0, 1)
-                },
-                new Vector4[4]
-                {
-                    new Vector4(0, 1, 1, 1),
-                    new Vector4(1, 1, 1, 1),
-                    new Vector4(0, 1, 0, 1),
-                    new Vector4(1, 1, 0, 1)
-                },
-                new Vector4[4]
-                {
-                    new Vector4(0, 0, 1, 1),
-                    new Vector4(0, 0, 0, 1),
-                    new Vector4(0, 1, 1, 1),
-                    new Vector4(0, 1, 0, 1)
-                },
-                new Vector4[4]
-                {
-                    new Vector4(1, 0, 1, 1),
-                    new Vector4(1, 0, 0, 1),
-                    new Vector4(1, 1, 1, 1),
-                    new Vector4(1, 1, 0, 1)
-                },
-            };
-
             mesh = new List<Triangle>();
             // Front wall
             TriangulateFrontBack(new Vector4(0, 0, 1, 1), new Vector4(0, 0, 1, 1));
