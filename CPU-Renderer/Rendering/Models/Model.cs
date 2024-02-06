@@ -29,8 +29,6 @@ namespace CPU_Renderer.Rendering.Models
             foreach(var triangle in mesh)
             {
                 var P = triangle.A.P.ApplyMatrix(MVP);
-                if (P.Y > 1 || P.Y < -1)
-                    Console.WriteLine("xd");
                 var A = new Pixel()
                 {
                     P = P / P.W,
@@ -39,8 +37,6 @@ namespace CPU_Renderer.Rendering.Models
                 };
 
                 P = triangle.B.P.ApplyMatrix(MVP);
-                if (P.Y > 1 || P.Y < -1)
-                    Console.WriteLine("xd");
                 var B = new Pixel()
                 {
                     P = P / P.W,
@@ -49,8 +45,6 @@ namespace CPU_Renderer.Rendering.Models
                 };
 
                 P = triangle.C.P.ApplyMatrix(MVP);
-                if (P.Y > 1 || P.Y < -1)
-                    Console.WriteLine("xd");
                 var C = new Pixel()
                 {
                     P = P / P.W,
@@ -83,7 +77,6 @@ namespace CPU_Renderer.Rendering.Models
         protected Matrix4x4 GetProjMatrix(float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance)
         {
             float ctgfov = 1.0f / (float)Math.Tan(Utils.AngleToRadians(fieldOfView / 2));
-            //return Matrix4x4.Transpose(Matrix4x4.CreatePerspectiveFieldOfView(Utils.AngleToRadians(fieldOfView), aspectRatio, nearPlaneDistance, farPlaneDistance));
             return new Matrix4x4(
                 ctgfov / aspectRatio, 0, 0, 0,
                 0, ctgfov, 0, 0,

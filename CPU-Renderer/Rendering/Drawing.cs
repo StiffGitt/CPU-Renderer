@@ -98,16 +98,9 @@ namespace CPU_Renderer.Rendering
                 if (points[i].Y <= 0)
                     points[i] = new Point(points[i].X, 1);
             }
-            try
-            {
-                Drawing.DrawLine(lb, triangle.A.Color, points[2], points[0]);
-                Drawing.DrawLine(lb, triangle.A.Color, points[0], points[1]);
-                Drawing.DrawLine(lb, triangle.A.Color, points[1], points[2]);
-            }
-            catch (Exception ex)
-            {
-                
-            }
+            Drawing.DrawLine(lb, triangle.A.Color, points[2], points[0]);
+            Drawing.DrawLine(lb, triangle.A.Color, points[0], points[1]);
+            Drawing.DrawLine(lb, triangle.A.Color, points[1], points[2]);
         }
     }
 }
