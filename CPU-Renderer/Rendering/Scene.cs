@@ -25,6 +25,11 @@ namespace CPU_Renderer.Rendering
             this.pictureBox = pictureBox;
             InitializeModels();
             InitializeCamera();
+            Draw();
+        }
+
+        public void Draw()
+        {
             Render();
         }
 
@@ -36,6 +41,18 @@ namespace CPU_Renderer.Rendering
                 triangles.AddRange(model.CalculateModelMesh(curCam.Position, curCam.Target, curCam.UpVector, Projection.fieldOfView,
                     Projection.aspectRatio, Projection.nearPlane, Projection.farPlane));
             };
+
+            foreach(var tri in triangles)
+            {
+                tri.CastToScreen(pictureBox.Width, pictureBox.Height);
+            }
+
+            lockmap.LockBits();
+            foreach (var triangle in triangles)
+            {
+                Drawing.DrawTriangleEdges(lockmap, triangle);
+            }
+            lockmap.UnlockBits();
         }
 
         private void InitializeModels()
@@ -49,7 +66,7 @@ namespace CPU_Renderer.Rendering
         {
             curCam = new Camera()
             {
-                Position = new Vector3(0.5f, 0.5f, 3.0f),
+                Position = new Vector3(3.0f, 0.5f, 0.5f),
                 Target = new Vector3(0.0f, 0.5f, 0.5f),
                 UpVector = new Vector3(0, 0, 1)
             };

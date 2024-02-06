@@ -29,6 +29,8 @@ namespace CPU_Renderer.Rendering.Models
             foreach(var triangle in mesh)
             {
                 var P = triangle.A.P.ApplyMatrix(MVP);
+                if (P.Y > 1 || P.Y < -1)
+                    Console.WriteLine("xd");
                 var A = new Pixel()
                 {
                     P = P / P.W,
@@ -37,6 +39,8 @@ namespace CPU_Renderer.Rendering.Models
                 };
 
                 P = triangle.B.P.ApplyMatrix(MVP);
+                if (P.Y > 1 || P.Y < -1)
+                    Console.WriteLine("xd");
                 var B = new Pixel()
                 {
                     P = P / P.W,
@@ -45,6 +49,8 @@ namespace CPU_Renderer.Rendering.Models
                 };
 
                 P = triangle.C.P.ApplyMatrix(MVP);
+                if (P.Y > 1 || P.Y < -1)
+                    Console.WriteLine("xd");
                 var C = new Pixel()
                 {
                     P = P / P.W,
@@ -55,28 +61,35 @@ namespace CPU_Renderer.Rendering.Models
                 transformedMesh.Add(new Triangle() { A = A, B = B, C = C});
             }
 
-            return mesh;
+            return transformedMesh;
         }
 
         protected abstract List<Triangle> GetTriangulation();
 
         protected Matrix4x4 GetModelMatrix()
         {
-            Matrix4x4 Ms = Matrix4x4.CreateScale(Scale);
-            Matrix4x4 Mt = Matrix4x4.CreateTranslation(Translation);
-            Matrix4x4 Mr = Matrix4x4.CreateFromYawPitchRoll(Pivot.X, Pivot.Y, Pivot.Z);
+            Matrix4x4 Ms = Matrix4x4.Transpose(Matrix4x4.CreateScale(Scale));
+            Matrix4x4 Mt = Matrix4x4.Transpose(Matrix4x4.CreateTranslation(Translation));
+            Matrix4x4 Mr = Matrix4x4.Transpose(Matrix4x4.CreateFromYawPitchRoll(Pivot.X, Pivot.Y, Pivot.Z));
 
             return Ms * Mt * Mr;
         }
 
         protected Matrix4x4 GetViewMatrix(Vector3 CameraPos, Vector3 CameraTarget, Vector3 UpVector)
         {
-            return Matrix4x4.CreateLookAt(CameraPos, CameraTarget, UpVector);
+            return Matrix4x4.Transpose(Matrix4x4.CreateLookAt(CameraPos, CameraTarget, UpVector));
         }
 
         protected Matrix4x4 GetProjMatrix(float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance)
         {
-            return Matrix4x4.CreatePerspectiveFieldOfView(Utils.AngleToRadians(fieldOfView), aspectRatio, nearPlaneDistance, farPlaneDistance);
+            float ctgfov = 1.0f / (float)Math.Tan(Utils.AngleToRadians(fieldOfView / 2));
+            //return Matrix4x4.Transpose(Matrix4x4.CreatePerspectiveFieldOfView(Utils.AngleToRadians(fieldOfView), aspectRatio, nearPlaneDistance, farPlaneDistance));
+            return new Matrix4x4(
+                ctgfov / aspectRatio, 0, 0, 0,
+                0, ctgfov, 0, 0,
+                0, 0, (farPlaneDistance + nearPlaneDistance) / (farPlaneDistance - nearPlaneDistance), (-2 * farPlaneDistance * nearPlaneDistance) / (farPlaneDistance - nearPlaneDistance),
+                0, 0, 1, 0
+                );
         }
     }
 }

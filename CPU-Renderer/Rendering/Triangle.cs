@@ -11,5 +11,14 @@ namespace CPU_Renderer.Rendering
         public Pixel A { get; set; }
         public Pixel B { get; set; }
         public Pixel C { get; set; }
+
+        public List<Pixel> pixels = new List<Pixel>();
+
+        public void CastToScreen(int width, int height)
+        {
+            A = A.CastToScreen(width, height);
+            B = B.CastToScreen(width, height);
+            C = C.CastToScreen(width, height);
+        }
     }
 }

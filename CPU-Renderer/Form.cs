@@ -9,6 +9,14 @@ namespace CPU_Renderer
         {
             InitializeComponent();
             this.scene = new Scene(pictureBox);
+            Draw();
+        }
+
+        private void Draw()
+        {
+            if (scene != null)
+                scene.Draw();
+            pictureBox.Refresh();
         }
 
     }
