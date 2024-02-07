@@ -29,15 +29,17 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            shadingComboBox = new ComboBox();
+            gridModeCheckBox = new CheckBox();
             backFaceCheckBox = new CheckBox();
             changeCameraButton = new Button();
             animationCheckBox = new CheckBox();
-            gridModeCheckBox = new CheckBox();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(shadingComboBox);
             groupBox1.Controls.Add(gridModeCheckBox);
             groupBox1.Controls.Add(backFaceCheckBox);
             groupBox1.Controls.Add(changeCameraButton);
@@ -48,6 +50,26 @@
             groupBox1.Size = new Size(184, 361);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
+            // 
+            // shadingComboBox
+            // 
+            shadingComboBox.FormattingEnabled = true;
+            shadingComboBox.Location = new Point(12, 88);
+            shadingComboBox.Name = "shadingComboBox";
+            shadingComboBox.Size = new Size(121, 23);
+            shadingComboBox.TabIndex = 4;
+            shadingComboBox.SelectedIndexChanged += shadingComboBox_SelectedIndexChanged;
+            // 
+            // gridModeCheckBox
+            // 
+            gridModeCheckBox.AutoSize = true;
+            gridModeCheckBox.Location = new Point(12, 63);
+            gridModeCheckBox.Name = "gridModeCheckBox";
+            gridModeCheckBox.Size = new Size(82, 19);
+            gridModeCheckBox.TabIndex = 3;
+            gridModeCheckBox.Text = "Grid Mode";
+            gridModeCheckBox.UseVisualStyleBackColor = true;
+            gridModeCheckBox.CheckedChanged += gridModeCheckBox_CheckedChanged;
             // 
             // backFaceCheckBox
             // 
@@ -62,7 +84,7 @@
             // 
             // changeCameraButton
             // 
-            changeCameraButton.Location = new Point(12, 88);
+            changeCameraButton.Location = new Point(12, 117);
             changeCameraButton.Name = "changeCameraButton";
             changeCameraButton.Size = new Size(126, 23);
             changeCameraButton.TabIndex = 1;
@@ -80,17 +102,6 @@
             animationCheckBox.Text = "Animation";
             animationCheckBox.UseVisualStyleBackColor = true;
             animationCheckBox.CheckedChanged += animationCheckBox_CheckedChanged;
-            // 
-            // gridModeCheckBox
-            // 
-            gridModeCheckBox.AutoSize = true;
-            gridModeCheckBox.Location = new Point(12, 63);
-            gridModeCheckBox.Name = "gridModeCheckBox";
-            gridModeCheckBox.Size = new Size(82, 19);
-            gridModeCheckBox.TabIndex = 3;
-            gridModeCheckBox.Text = "Grid Mode";
-            gridModeCheckBox.UseVisualStyleBackColor = true;
-            gridModeCheckBox.CheckedChanged += gridModeCheckBox_CheckedChanged;
             // 
             // ConfigurationForm
             // 
@@ -114,5 +125,6 @@
         private Button changeCameraButton;
         private CheckBox backFaceCheckBox;
         private CheckBox gridModeCheckBox;
+        private ComboBox shadingComboBox;
     }
 }

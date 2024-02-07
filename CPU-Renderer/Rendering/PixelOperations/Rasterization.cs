@@ -28,18 +28,7 @@ namespace CPU_Renderer.Rendering.PixelOperations
             return (float)(b.X - a.X) / (b.Y - a.Y);
         }
 
-        private static (float alfa, float beta, float gamma) GetBar(PointF P, Triangle triangle)
-        {
-            var A = triangle.A.P;
-            var B = triangle.B.P;
-            var C = triangle.C.P;
-            float alfa = ((B.Y * C.X - C.Y * B.X) + (C.Y * P.X - P.Y * C.X) + (P.Y * B.X - B.Y * P.X)) /
-                ((B.Y * C.X - C.Y * B.X) + (C.Y * A.X - A.Y * C.X) + (A.Y * B.X - B.Y * A.X));
-            float beta = ((C.Y * A.X - A.Y * C.X) + (A.Y * P.X - P.Y * A.X) + (P.Y * C.X - C.Y * P.X)) /
-                ((B.Y * C.X - C.Y * B.X) + (C.Y * A.X - A.Y * C.X) + (A.Y * B.X - B.Y * A.X));
-            float gamma = 1 - alfa - beta;
-            return (alfa, beta, gamma);
-        }
+        
 
         public static List<Pixel> RasterizeWithScanLine(Triangle triangle)
         {
@@ -82,7 +71,7 @@ namespace CPU_Renderer.Rendering.PixelOperations
                     for (int x = (int)AET[i].x; x < AET[i + 1].x; x++)
                     {
                         var pf = new PointF(x, y);
-                        var bar = GetBar(pf, triangle);
+                        var bar = Utils.GetBar(pf, triangle);
                         Vector4 P = new Vector4()
                         {
                             X = pf.X,
@@ -93,6 +82,7 @@ namespace CPU_Renderer.Rendering.PixelOperations
                         pixels.Add(new Pixel()
                         {
                             P = P,
+                            WP = bar.alfa * triangle.A.WP + bar.beta * triangle.B.WP + bar.gamma * triangle.C.WP,
                             N = bar.alfa * triangle.A.N + bar.beta * triangle.B.N + bar.gamma * triangle.C.N,
                             Color = triangle.A.Color,
                             Material = triangle.A.Material,

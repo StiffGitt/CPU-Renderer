@@ -1,4 +1,5 @@
 ﻿using CPU_Renderer.Rendering.Configurations;
+using CPU_Renderer.Rendering.PixelOperations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,10 @@ namespace CPU_Renderer
         {
             InitializeComponent();
             mainForm = form;
+            shadingComboBox.Items.Add("Constant");
+            shadingComboBox.Items.Add("Gouraud");
+            shadingComboBox.Items.Add("Phong");
+            shadingComboBox.SelectedIndex = 2;
         }
 
         private void animationCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -39,6 +44,23 @@ namespace CPU_Renderer
         private void gridModeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Config.GridMode = gridModeCheckBox.Checked;
+            mainForm.Draw();
+        }
+
+        private void shadingComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch(shadingComboBox.SelectedIndex)
+            {
+                case 0:
+                    Config.ShadingType = ShadingTypes.Constant;
+                    break;
+                case 1:
+                    Config.ShadingType = ShadingTypes.Gouraud;
+                    break;
+                case 2:
+                    Config.ShadingType = ShadingTypes.Gouraud;
+                    break;
+            }
             mainForm.Draw();
         }
     }

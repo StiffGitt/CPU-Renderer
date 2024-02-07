@@ -30,34 +30,43 @@ namespace CPU_Renderer.Rendering.Models
             //Parallel.ForEach(mesh, triangle =>
             foreach(var triangle in mesh)
             {
-                var P = triangle.A.P.ApplyMatrix(MVP);
+                var WP = triangle.A.P.ApplyMatrix(Model);
+                var P = WP.ApplyMatrix(VP);
+                WP = WP / WP.W;
                 if (P.W == 0)
                     continue;
                 var A = new Pixel()
                 {
                     P = P / P.W,
+                    WP = new Vector3(WP.X, WP.Y, WP.Z),
                     N = Vector4.Normalize(triangle.A.N.ApplyMatrix(MNormal)),
                     Color = triangle.A.Color,
                     Material = triangle.B.Material
                 };
 
-                P = triangle.B.P.ApplyMatrix(MVP);
+                WP = triangle.B.P.ApplyMatrix(Model);
+                P = WP.ApplyMatrix(VP);
+                WP = WP / WP.W;
                 if (P.W == 0)
                     continue;
                 var B = new Pixel()
                 {
                     P = P / P.W,
+                    WP = new Vector3(WP.X, WP.Y, WP.Z),
                     N = Vector4.Normalize(triangle.B.N.ApplyMatrix(MNormal)),
                     Color = triangle.B.Color,
                     Material = triangle.B.Material
                 };
 
-                P = triangle.C.P.ApplyMatrix(MVP);
+                WP = triangle.C.P.ApplyMatrix(Model);
+                P = WP.ApplyMatrix(VP);
+                WP = WP / WP.W;
                 if (P.W == 0)
                     continue;
                 var C = new Pixel()
                 {
                     P = P / P.W,
+                    WP = new Vector3(WP.X, WP.Y, WP.Z),
                     N = Vector4.Normalize(triangle.C.N.ApplyMatrix(MNormal)),
                     Color = triangle.C.Color,
                     Material = triangle.C.Material

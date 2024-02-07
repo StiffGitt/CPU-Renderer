@@ -11,6 +11,7 @@ namespace CPU_Renderer.Rendering
     public struct Pixel
     {
         public Vector4 P { get; set; }
+        public Vector3 WP { get; set; }
         public Vector4 N { get; set; }
         public Color Color { get; set; }
         public Material Material { get; set; }
@@ -30,7 +31,7 @@ namespace CPU_Renderer.Rendering
 
             return new Pixel()
             {
-                P = screenPos, N = N, Color = Color, Material = Material
+                P = screenPos, WP = WP, N = N, Color = Color, Material = Material
             };
         }
 

@@ -1,4 +1,5 @@
 using CPU_Renderer.Rendering;
+using CPU_Renderer.Rendering.PixelOperations;
 
 namespace CPU_Renderer
 {

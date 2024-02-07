@@ -18,12 +18,13 @@ namespace CPU_Renderer.Rendering
         private LockBitmap lockmap;
         private PictureBox pictureBox;
         private List<Model> models;
+        private List<Light> lights;
         private int animationTick = 0;
         private Model rotatingModel;
         private Model rotatingModel2;
         private Model movingModel;
         private Vector3 movingModelPosition = new Vector3(Config.MovingCircleRadius, 0.0f, 0.0f);
-        private Vector3 movingModelSize = new Vector3(0.25f, 0.25f, 0.5f);
+        private Vector3 movingModelSize = new Vector3(0.1f, 0.1f, 0.1f);
         private CameraType cameraType = CameraType.Stale;
 
         public Scene(PictureBox pictureBox)
@@ -33,6 +34,7 @@ namespace CPU_Renderer.Rendering
             this.lockmap = new LockBitmap(bitmap);
             this.pictureBox = pictureBox;
             InitializeModels();
+            InitializeLights();
             Draw();
         }
 
@@ -105,6 +107,11 @@ namespace CPU_Renderer.Rendering
                 tri.pixels = Rasterization.RasterizeWithScanLine(tri);
             }
 
+            foreach (var tri in triangles)
+            {
+                Shading.DoShading(tri, lights, curCam.Position);
+            }
+
             Drawing.InitZBuffer(pictureBox.Width, pictureBox.Height);
             lockmap.LockBits();
             foreach (var triangle in triangles)
@@ -119,7 +126,7 @@ namespace CPU_Renderer.Rendering
 
         private void InitializeModels()
         {
-            movingModel = new Cube(Material.Diffusive, Color.Blue, movingModelPosition, movingModelSize, new Vector3(0, 0, 0));
+            movingModel = new Sphere(Material.Diffusive, Color.Blue, movingModelPosition, movingModelSize, new Vector3(0, 0, 0));
             rotatingModel = new Sphere(Material.Specular, Color.Green, new Vector3(0, 0, 0), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
             rotatingModel2 = new Cube(Material.Diffusive, Color.Red, new Vector3(2.0f, 2.0f, -3.0f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
             
@@ -129,6 +136,17 @@ namespace CPU_Renderer.Rendering
                 movingModel,
                 rotatingModel2,
             };
+        }
+
+        private void InitializeLights()
+        {
+            lights = new List<Light>();
+            var staleLight = new Light()
+            {
+                Diffuse = new Vector3(125, 125, 125),
+                Position = new Vector3(1.0f, 1.0f, 1.0f),
+            };
+            lights.Add(staleLight);
         }
 
         private Camera GetCamera()
