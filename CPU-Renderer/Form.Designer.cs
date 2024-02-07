@@ -39,7 +39,7 @@
             pictureBox.Dock = DockStyle.Fill;
             pictureBox.Location = new Point(0, 0);
             pictureBox.Name = "pictureBox";
-            pictureBox.Size = new Size(984, 561);
+            pictureBox.Size = new Size(1584, 861);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             // 
@@ -51,8 +51,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(984, 561);
+            ClientSize = new Size(1584, 861);
             Controls.Add(pictureBox);
+            MaximumSize = new Size(1600, 900);
+            MinimumSize = new Size(1600, 900);
             Name = "Form";
             Text = "CPU-Renderer";
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();

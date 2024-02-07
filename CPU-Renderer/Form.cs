@@ -31,7 +31,7 @@ namespace CPU_Renderer
             scene.ChangeCamera();
             Draw();
         }
-        
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             scene.DoTick();

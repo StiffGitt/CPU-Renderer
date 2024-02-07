@@ -63,10 +63,10 @@ namespace CPU_Renderer.Rendering
         {
             animationTick = (animationTick + 1) % Config.FullTicks;
             var newPivot = rotatingModel.Pivot + Vector3.UnitX * 2.0f * MathF.PI / Config.FullTicks;
-            rotatingModel.Pivot = (newPivot.X > MathF.PI * 2)? Vector3.Zero : newPivot;
+            rotatingModel.Pivot = Utils.NormalizePivot(newPivot);
 
             newPivot = rotatingModel.Pivot + Vector3.One * 2.0f * MathF.PI / Config.FullTicks;
-            rotatingModel2.Pivot = (newPivot.X > MathF.PI * 2) ? Vector3.Zero : newPivot;
+            rotatingModel2.Pivot = Utils.NormalizePivot(newPivot);
 
             float phi = ((float)animationTick / Config.FullTicks) * 2.0f * MathF.PI;
             float x = Config.MovingCircleRadius * MathF.Cos(phi);

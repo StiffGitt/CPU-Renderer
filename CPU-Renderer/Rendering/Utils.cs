@@ -50,5 +50,14 @@ namespace CPU_Renderer.Rendering
                 Z = (float)color.B / 255,
             };
         }
+
+        public static Vector3 NormalizePivot(Vector3 pivot)
+        {
+            return new Vector3(
+                (pivot.X >= MathF.PI * 2)? 0 : pivot.X,
+                (pivot.Y >= MathF.PI * 2)? 0 : pivot.Y,
+                (pivot.Z >= MathF.PI * 2)? 0 : pivot.Z
+                );
+        }
     }
 }
