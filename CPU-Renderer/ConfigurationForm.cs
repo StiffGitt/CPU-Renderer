@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPU_Renderer.Rendering.Configurations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,6 +28,18 @@ namespace CPU_Renderer
         private void changeCameraButton_Click(object sender, EventArgs e)
         {
             mainForm.ChangeCamera();
+        }
+
+        private void backFaceCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.BackFaceCulling = backFaceCheckBox.Checked;
+            mainForm.Draw();
+        }
+
+        private void gridModeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.GridMode = gridModeCheckBox.Checked;
+            mainForm.Draw();
         }
     }
 }

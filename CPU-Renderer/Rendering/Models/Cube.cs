@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPU_Renderer.Rendering.Lighting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -13,9 +14,10 @@ namespace CPU_Renderer.Rendering.Models
         private Color color;
         private List<Triangle> mesh;
 
-        public Cube(Color color, Vector3 translation, Vector3 scale, Vector3 pivot)
+        public Cube(Material material, Color color, Vector3 translation, Vector3 scale, Vector3 pivot)
         {
             this.color = color;
+            base.Material = material;
             base.Translation = translation;
             base.Scale = scale;
             base.Pivot = pivot;
@@ -26,17 +28,17 @@ namespace CPU_Renderer.Rendering.Models
         {
             mesh = new List<Triangle>();
             // Front wall
-            TriangulateFrontBack(new Vector4(0, 0, 1, 1), new Vector4(0, 0, 1, 1));
+            TriangulateFrontBack(new Vector4(0, 0, 1, 1), new Vector4(0, 0, 1, 0));
             // Back wall
-            TriangulateFrontBack(new Vector4(0, 0, 0, 1), new Vector4(0, 0, -1, 1));
+            TriangulateFrontBack(new Vector4(0, 0, 0, 1), new Vector4(0, 0, -1, 0));
             // Left wall
-            TriangulateLeftRight(new Vector4(0, 0, 0, 1), new Vector4(-1, 0, 0, 1));
+            TriangulateLeftRight(new Vector4(0, 0, 0, 1), new Vector4(1, 0, 0, 0));
             // Right wall
-            TriangulateLeftRight(new Vector4(1, 0, 0, 1), new Vector4(1, 0, 0, 1));
+            TriangulateLeftRight(new Vector4(1, 0, 0, 1), new Vector4(-1, 0, 0, 0));
             // Bottom wall
-            TriangulateBottomUp(new Vector4(0, 0, 0, 1), new Vector4(0, -1, 0, 1));
+            TriangulateBottomUp(new Vector4(0, 0, 0, 1), new Vector4(0, 1, 0, 0));
             // Up wall
-            TriangulateBottomUp(new Vector4(0, 1, 0, 1), new Vector4(0, 1, 0, 1));
+            TriangulateBottomUp(new Vector4(0, 1, 0, 1), new Vector4(0, -1, 0, 0));
         }
 
         private void TriangulateFrontBack(Vector4 start, Vector4 N)
@@ -51,9 +53,9 @@ namespace CPU_Renderer.Rendering.Models
                     Vector4 C = new Vector4(start.X + (j + 1) * off, start.Y + i * off, start.Z, start.W);
                     mesh.Add(new Triangle()
                     {
-                        A = new Pixel() { P = A, N = N, Color = color },
-                        B = new Pixel() { P = B, N = N, Color = color },
-                        C = new Pixel() { P = C, N = N, Color = color }
+                        A = new Pixel() { P = A, N = N, Color = color, Material = Material },
+                        B = new Pixel() { P = B, N = N, Color = color, Material = Material },
+                        C = new Pixel() { P = C, N = N, Color = color, Material = Material }
                     });
 
                     A = new Vector4(start.X + j * off, start.Y + i * off, start.Z, start.W);
@@ -61,9 +63,9 @@ namespace CPU_Renderer.Rendering.Models
                     C = new Vector4(start.X + (j + 1) * off, start.Y + (i + 1) * off, start.Z, start.W);
                     mesh.Add(new Triangle()
                     {
-                        A = new Pixel() { P = A, N = N, Color = color },
-                        B = new Pixel() { P = B, N = N, Color = color },
-                        C = new Pixel() { P = C, N = N, Color = color }
+                        A = new Pixel() { P = A, N = N, Color = color, Material = Material },
+                        B = new Pixel() { P = B, N = N, Color = color, Material = Material },
+                        C = new Pixel() { P = C, N = N, Color = color, Material = Material }
                     });
                 }
             }
@@ -81,9 +83,9 @@ namespace CPU_Renderer.Rendering.Models
                     Vector4 C = new Vector4(start.X, start.Y + (j + 1) * off, start.Z + i * off, start.W);
                     mesh.Add(new Triangle()
                     {
-                        A = new Pixel() { P = A, N = N, Color = color },
-                        B = new Pixel() { P = B, N = N, Color = color },
-                        C = new Pixel() { P = C, N = N, Color = color }
+                        A = new Pixel() { P = A, N = N, Color = color, Material = Material },
+                        B = new Pixel() { P = B, N = N, Color = color, Material = Material },
+                        C = new Pixel() { P = C, N = N, Color = color, Material = Material }
                     });
 
                     A = new Vector4(start.X, start.Y + j * off, start.Z + i * off, start.W);
@@ -91,9 +93,9 @@ namespace CPU_Renderer.Rendering.Models
                     C = new Vector4(start.X, start.Y + (j + 1) * off, start.Z + (i + 1) * off, start.W);
                     mesh.Add(new Triangle()
                     {
-                        A = new Pixel() { P = A, N = N, Color = color },
-                        B = new Pixel() { P = B, N = N, Color = color },
-                        C = new Pixel() { P = C, N = N, Color = color }
+                        A = new Pixel() { P = A, N = N, Color = color, Material = Material },
+                        B = new Pixel() { P = B, N = N, Color = color, Material = Material },
+                        C = new Pixel() { P = C, N = N, Color = color, Material = Material }
                     });
                 }
             }
@@ -111,9 +113,9 @@ namespace CPU_Renderer.Rendering.Models
                     Vector4 C = new Vector4(start.X + (j + 1) * off, start.Y, start.Z + i * off, start.W);
                     mesh.Add(new Triangle()
                     {
-                        A = new Pixel() { P = A, N = N, Color = color },
-                        B = new Pixel() { P = B, N = N, Color = color },
-                        C = new Pixel() { P = C, N = N, Color = color }
+                        A = new Pixel() { P = A, N = N, Color = color, Material = Material },
+                        B = new Pixel() { P = B, N = N, Color = color, Material = Material },
+                        C = new Pixel() { P = C, N = N, Color = color, Material = Material }
                     });
 
                     A = new Vector4(start.X + j * off, start.Y, start.Z + i * off, start.W);
@@ -121,9 +123,9 @@ namespace CPU_Renderer.Rendering.Models
                     C = new Vector4(start.X + (j + 1) * off, start.Y, start.Z + (i + 1) * off, start.W);
                     mesh.Add(new Triangle()
                     {
-                        A = new Pixel() { P = A, N = N, Color = color },
-                        B = new Pixel() { P = B, N = N, Color = color },
-                        C = new Pixel() { P = C, N = N, Color = color }
+                        A = new Pixel() { P = A, N = N, Color = color, Material = Material },
+                        B = new Pixel() { P = B, N = N, Color = color, Material = Material },
+                        C = new Pixel() { P = C, N = N, Color = color, Material = Material }
                     });
                 }
             }

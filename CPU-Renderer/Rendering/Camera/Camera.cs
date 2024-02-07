@@ -29,7 +29,7 @@ namespace CPU_Renderer.Rendering
         {
             return new Camera()
             {
-                Position = new Vector3(0.0f, 10.0f, 1.0f),
+                Position = new Vector3(0.0f, -10.0f, 5.0f),
                 Target = target,
                 UpVector = defaultUp
             };

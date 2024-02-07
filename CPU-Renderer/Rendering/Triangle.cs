@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +25,11 @@ namespace CPU_Renderer.Rendering
         public bool IsOnScreen(int width, int height)
         {
             return A.IsOnScreen(width, height) || B.IsOnScreen(width, height) || C.IsOnScreen(width, height);
+        }
+
+        public bool BackFaceCulling(Vector3 camPos)
+        {
+            return A.IsBackFace(camPos) && B.IsBackFace(camPos) && C.IsBackFace(camPos);
         }
     }
 }

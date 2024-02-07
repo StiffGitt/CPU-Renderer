@@ -10,10 +10,11 @@ namespace CPU_Renderer.Rendering.Lighting
     public class Light
     {
         public static Color Ambient = Color.FromArgb(55, 55, 55);
-        public static float k_a = 0.1f;
-        public float A_C = 1f;
-        public float A_L = 0.09f;
-        public float A_Q = 0.032f;
+        public Color Diffuse { get; set; }
+        public Color Specular { get; set; }
+        public float A_C { get; set; } = 1f;
+        public float A_L { get; set; } = 0.09f;
+        public float A_Q { get; set; } = 0.032f;
         public Vector3 Position { get; set; }
     }
 }

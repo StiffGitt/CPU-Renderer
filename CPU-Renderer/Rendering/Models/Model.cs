@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPU_Renderer.Rendering.Lighting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -12,6 +13,7 @@ namespace CPU_Renderer.Rendering.Models
         public Vector3 Translation { get; set; }
         public Vector3 Scale { get; set; }
         public Vector3 Pivot { get; set; }
+        public Material Material { get; set; }
 
 
         public List<Triangle> CalculateModelMesh(Vector3 cameraPos, Vector3 cameraTarget, Vector3 upVector, 
@@ -21,7 +23,7 @@ namespace CPU_Renderer.Rendering.Models
             var Proj = GetProjMatrix(fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance);
             var View = GetViewMatrix(cameraPos, cameraTarget, upVector);
             var Model = GetModelMatrix();
-            var MVP = Proj * View * Model;
+            var VP = Proj * View;
             Matrix4x4.Invert(Matrix4x4.Transpose(Model), out var MNormal);
 
             var transformedMesh = new List<Triangle>();
@@ -35,7 +37,8 @@ namespace CPU_Renderer.Rendering.Models
                 {
                     P = P / P.W,
                     N = Vector4.Normalize(triangle.A.N.ApplyMatrix(MNormal)),
-                    Color = triangle.A.Color
+                    Color = triangle.A.Color,
+                    Material = triangle.B.Material
                 };
 
                 P = triangle.B.P.ApplyMatrix(MVP);
@@ -45,7 +48,8 @@ namespace CPU_Renderer.Rendering.Models
                 {
                     P = P / P.W,
                     N = Vector4.Normalize(triangle.B.N.ApplyMatrix(MNormal)),
-                    Color = triangle.B.Color
+                    Color = triangle.B.Color,
+                    Material = triangle.B.Material
                 };
 
                 P = triangle.C.P.ApplyMatrix(MVP);
@@ -55,7 +59,8 @@ namespace CPU_Renderer.Rendering.Models
                 {
                     P = P / P.W,
                     N = Vector4.Normalize(triangle.C.N.ApplyMatrix(MNormal)),
-                    Color = triangle.C.Color
+                    Color = triangle.C.Color,
+                    Material = triangle.C.Material
                 };
 
                 transformedMesh.Add(new Triangle() { A = A, B = B, C = C});

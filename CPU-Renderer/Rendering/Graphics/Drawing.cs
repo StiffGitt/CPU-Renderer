@@ -72,7 +72,7 @@ namespace CPU_Renderer.Rendering.Graphics
         }
         public static void DrawLine(LockBitmap lb, Color color, Point a, Point b)
         {
-            DrawLineWithBresenham(lb, color, new Point(a.X, lb.Height - a.Y), new Point(b.X, lb.Height - b.Y));
+            DrawLineWithBresenham(lb, color, new Point(a.X, a.Y), new Point(b.X, b.Y));
         }
 
         public static void ClearLB(LockBitmap lb, Color c)
@@ -121,15 +121,10 @@ namespace CPU_Renderer.Rendering.Graphics
             foreach (var p in triangle.pixels)
             {
                 //lb.SetPixel((int)p.P.X, (int)p.P.Y, p.Color);
-                try
+                if (p.IsOnScreen(lb.Width, lb.Height))
                 {
-                    if (p.IsOnScreen(lb.Width, lb.Height))
-                    {
-                        SetPixelWithZBuffer(lb, (int)p.P.X, (int)p.P.Y, p.P.Z, p.Color);
-                    }
+                    SetPixelWithZBuffer(lb, (int)p.P.X, (int)p.P.Y, p.P.Z, p.Color);
                 }
-                catch(Exception) 
-                { }
             }
         }
 

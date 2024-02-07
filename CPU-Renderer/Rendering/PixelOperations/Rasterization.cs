@@ -94,7 +94,8 @@ namespace CPU_Renderer.Rendering.PixelOperations
                         {
                             P = P,
                             N = bar.alfa * triangle.A.N + bar.beta * triangle.B.N + bar.gamma * triangle.C.N,
-                            Color = triangle.A.Color
+                            Color = triangle.A.Color,
+                            Material = triangle.A.Material,
                         });
                     }
                 }

@@ -14,7 +14,7 @@ namespace CPU_Renderer
             Draw();
         }
 
-        private void Draw()
+        public void Draw()
         {
             if (scene != null)
                 scene.Draw();

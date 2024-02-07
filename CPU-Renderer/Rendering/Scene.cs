@@ -1,5 +1,6 @@
 ﻿using CPU_Renderer.Rendering.Configurations;
 using CPU_Renderer.Rendering.Graphics;
+using CPU_Renderer.Rendering.Lighting;
 using CPU_Renderer.Rendering.Models;
 using CPU_Renderer.Rendering.PixelOperations;
 using System;
@@ -19,6 +20,7 @@ namespace CPU_Renderer.Rendering
         private List<Model> models;
         private int animationTick = 0;
         private Model rotatingModel;
+        private Model rotatingModel2;
         private Model movingModel;
         private Vector3 movingModelPosition = new Vector3(Config.MovingCircleRadius, 0.0f, 0.0f);
         private Vector3 movingModelSize = new Vector3(0.25f, 0.25f, 0.5f);
@@ -61,6 +63,9 @@ namespace CPU_Renderer.Rendering
             var newPivot = rotatingModel.Pivot + Vector3.UnitX * 2.0f * MathF.PI / Config.FullTicks;
             rotatingModel.Pivot = (newPivot.X > MathF.PI * 2)? Vector3.Zero : newPivot;
 
+            newPivot = rotatingModel.Pivot + Vector3.One * 2.0f * MathF.PI / Config.FullTicks;
+            rotatingModel2.Pivot = (newPivot.X > MathF.PI * 2) ? Vector3.Zero : newPivot;
+
             float phi = ((float)animationTick / Config.FullTicks) * 2.0f * MathF.PI;
             float x = Config.MovingCircleRadius * MathF.Cos(phi);
             float z = Config.MovingCircleRadius * MathF.Sin(phi);
@@ -86,6 +91,9 @@ namespace CPU_Renderer.Rendering
                     Projection.aspectRatio, Projection.nearPlane, Projection.farPlane));
             };
 
+            if(Config.BackFaceCulling)
+                triangles = triangles.Where(t => !t.BackFaceCulling(curCam.Position)).ToList();
+
             foreach(var tri in triangles)
             {
                 tri.CastToScreen(pictureBox.Width, pictureBox.Height);
@@ -101,21 +109,25 @@ namespace CPU_Renderer.Rendering
             lockmap.LockBits();
             foreach (var triangle in triangles)
             {
-                Drawing.DrawTriangleEdges(lockmap, triangle);
-                //Drawing.DrawTriangle(lockmap, triangle);
+                if(Config.GridMode)
+                    Drawing.DrawTriangleEdges(lockmap, triangle);
+                else
+                    Drawing.DrawTriangle(lockmap, triangle);
             }
             lockmap.UnlockBits();
         }
 
         private void InitializeModels()
         {
-            movingModel = new Cube(Color.Blue, movingModelPosition, movingModelSize, new Vector3(0, 0, 0));
-            rotatingModel = new Cube(Color.Red, new Vector3(2.0f, 2.0f, -3.0f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
+            movingModel = new Cube(Material.Diffusive, Color.Blue, movingModelPosition, movingModelSize, new Vector3(0, 0, 0));
+            rotatingModel = new Sphere(Material.Specular, Color.Green, new Vector3(0, 0, 0), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
+            rotatingModel2 = new Cube(Material.Diffusive, Color.Red, new Vector3(2.0f, 2.0f, -3.0f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
+            
             models = new List<Model>()
             {
                 rotatingModel,
                 movingModel,
-                new Sphere(Color.Green, new Vector3(0,0,0), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0)),
+                rotatingModel2,
             };
         }
 

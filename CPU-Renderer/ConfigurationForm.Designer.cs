@@ -29,13 +29,17 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
-            animationCheckBox = new CheckBox();
+            backFaceCheckBox = new CheckBox();
             changeCameraButton = new Button();
+            animationCheckBox = new CheckBox();
+            gridModeCheckBox = new CheckBox();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(gridModeCheckBox);
+            groupBox1.Controls.Add(backFaceCheckBox);
             groupBox1.Controls.Add(changeCameraButton);
             groupBox1.Controls.Add(animationCheckBox);
             groupBox1.Dock = DockStyle.Fill;
@@ -44,6 +48,27 @@
             groupBox1.Size = new Size(184, 361);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
+            // 
+            // backFaceCheckBox
+            // 
+            backFaceCheckBox.AutoSize = true;
+            backFaceCheckBox.Location = new Point(12, 38);
+            backFaceCheckBox.Name = "backFaceCheckBox";
+            backFaceCheckBox.Size = new Size(119, 19);
+            backFaceCheckBox.TabIndex = 2;
+            backFaceCheckBox.Text = "Back Face Culling";
+            backFaceCheckBox.UseVisualStyleBackColor = true;
+            backFaceCheckBox.CheckedChanged += backFaceCheckBox_CheckedChanged;
+            // 
+            // changeCameraButton
+            // 
+            changeCameraButton.Location = new Point(12, 88);
+            changeCameraButton.Name = "changeCameraButton";
+            changeCameraButton.Size = new Size(126, 23);
+            changeCameraButton.TabIndex = 1;
+            changeCameraButton.Text = "Change Camera";
+            changeCameraButton.UseVisualStyleBackColor = true;
+            changeCameraButton.Click += changeCameraButton_Click;
             // 
             // animationCheckBox
             // 
@@ -56,15 +81,16 @@
             animationCheckBox.UseVisualStyleBackColor = true;
             animationCheckBox.CheckedChanged += animationCheckBox_CheckedChanged;
             // 
-            // changeCameraButton
+            // gridModeCheckBox
             // 
-            changeCameraButton.Location = new Point(12, 45);
-            changeCameraButton.Name = "changeCameraButton";
-            changeCameraButton.Size = new Size(126, 23);
-            changeCameraButton.TabIndex = 1;
-            changeCameraButton.Text = "Change Camera";
-            changeCameraButton.UseVisualStyleBackColor = true;
-            changeCameraButton.Click += changeCameraButton_Click;
+            gridModeCheckBox.AutoSize = true;
+            gridModeCheckBox.Location = new Point(12, 63);
+            gridModeCheckBox.Name = "gridModeCheckBox";
+            gridModeCheckBox.Size = new Size(82, 19);
+            gridModeCheckBox.TabIndex = 3;
+            gridModeCheckBox.Text = "Grid Mode";
+            gridModeCheckBox.UseVisualStyleBackColor = true;
+            gridModeCheckBox.CheckedChanged += gridModeCheckBox_CheckedChanged;
             // 
             // ConfigurationForm
             // 
@@ -86,5 +112,7 @@
         private GroupBox groupBox1;
         private CheckBox animationCheckBox;
         private Button changeCameraButton;
+        private CheckBox backFaceCheckBox;
+        private CheckBox gridModeCheckBox;
     }
 }
