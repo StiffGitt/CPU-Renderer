@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CPU_Renderer.Rendering
+namespace CPU_Renderer.Rendering.Graphics
 {
     public static class Drawing
     {
+        private static float[,] zBuffer;
         private static void DrawLineDown(LockBitmap lb, Color color, Point a, Point b)
         {
             int dx = b.X - a.X, dy = b.Y - a.Y, yi = 1;
@@ -17,7 +18,7 @@ namespace CPU_Renderer.Rendering
                 yi = -1;
                 dy = -dy;
             }
-            int d0 = (2 * dy) - dx;
+            int d0 = 2 * dy - dx;
             for (int x = a.X, y = a.Y; x <= b.X; x++)
             {
                 lb.SetPixel(x, y, color);
@@ -39,7 +40,7 @@ namespace CPU_Renderer.Rendering
                 xi = -1;
                 dx = -dx;
             }
-            int d0 = (2 * dx) - dy;
+            int d0 = 2 * dx - dy;
             for (int x = a.X, y = a.Y; y <= b.Y; y++)
             {
                 lb.SetPixel(x, y, color);
@@ -81,12 +82,24 @@ namespace CPU_Renderer.Rendering
                     lb.SetPixel(x, y, c);
         }
 
+        public static void InitZBuffer(int width, int height)
+        {
+            zBuffer = new float[width, height];
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    zBuffer[i, j] = float.NegativeInfinity;
+                }
+            }
+        }
+
         public static void DrawTriangleEdges(LockBitmap lb, Triangle triangle)
         {
             Point A = new Point((int)triangle.A.P.X, (int)triangle.A.P.Y);
             Point B = new Point((int)triangle.B.P.X, (int)triangle.B.P.Y);
             Point C = new Point((int)triangle.C.P.X, (int)triangle.C.P.Y);
-            var points = new Point[] {A, B, C};
+            var points = new Point[] { A, B, C };
             for (int i = 0; i < points.Length; i++)
             {
                 if (points[i].X >= lb.Width)
@@ -98,17 +111,35 @@ namespace CPU_Renderer.Rendering
                 if (points[i].Y <= 0)
                     points[i] = new Point(points[i].X, 1);
             }
-            Drawing.DrawLine(lb, triangle.A.Color, points[2], points[0]);
-            Drawing.DrawLine(lb, triangle.A.Color, points[0], points[1]);
-            Drawing.DrawLine(lb, triangle.A.Color, points[1], points[2]);
+            DrawLine(lb, triangle.A.Color, points[2], points[0]);
+            DrawLine(lb, triangle.A.Color, points[0], points[1]);
+            DrawLine(lb, triangle.A.Color, points[1], points[2]);
         }
 
         public static void DrawTriangle(LockBitmap lb, Triangle triangle)
         {
-            Parallel.ForEach(triangle.pixels, p =>
+            foreach (var p in triangle.pixels)
             {
-                lb.SetPixel((int)p.P.X, lb.Height - (int)p.P.Y, p.Color);
-            });
+                //lb.SetPixel((int)p.P.X, (int)p.P.Y, p.Color);
+                try
+                {
+                    if (p.IsOnScreen(lb.Width, lb.Height))
+                    {
+                        SetPixelWithZBuffer(lb, (int)p.P.X, (int)p.P.Y, p.P.Z, p.Color);
+                    }
+                }
+                catch(Exception) 
+                { }
+            }
+        }
+
+        private static void SetPixelWithZBuffer(LockBitmap lb, int x, int y, float z, Color color)
+        {
+            if (z > zBuffer[x, y])
+            {
+                zBuffer[x, y] = z;
+                lb.SetPixel(x, y, color);
+            }
         }
     }
 }

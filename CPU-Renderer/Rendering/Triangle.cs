@@ -20,5 +20,10 @@ namespace CPU_Renderer.Rendering
             B = B.CastToScreen(width, height);
             C = C.CastToScreen(width, height);
         }
+
+        public bool IsOnScreen(int width, int height)
+        {
+            return A.IsOnScreen(width, height) || B.IsOnScreen(width, height) || C.IsOnScreen(width, height);
+        }
     }
 }

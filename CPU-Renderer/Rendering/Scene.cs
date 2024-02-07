@@ -1,4 +1,5 @@
 ﻿using CPU_Renderer.Rendering.Configurations;
+using CPU_Renderer.Rendering.Graphics;
 using CPU_Renderer.Rendering.Models;
 using CPU_Renderer.Rendering.PixelOperations;
 using System;
@@ -16,7 +17,12 @@ namespace CPU_Renderer.Rendering
         private LockBitmap lockmap;
         private PictureBox pictureBox;
         private List<Model> models;
-        private Camera curCam;
+        private int animationTick = 0;
+        private Model rotatingModel;
+        private Model movingModel;
+        private Vector3 movingModelPosition = new Vector3(Config.MovingCircleRadius, 0.0f, 0.0f);
+        private Vector3 movingModelSize = new Vector3(0.25f, 0.25f, 0.5f);
+        private CameraType cameraType = CameraType.Stale;
 
         public Scene(PictureBox pictureBox)
         {
@@ -25,17 +31,54 @@ namespace CPU_Renderer.Rendering
             this.lockmap = new LockBitmap(bitmap);
             this.pictureBox = pictureBox;
             InitializeModels();
-            InitializeCamera();
             Draw();
+        }
+
+        public void DoTick()
+        {
+            MoveModels();
+        }
+
+        public void ChangeCamera()
+        {
+            switch(cameraType)
+            {
+                case CameraType.Stale:
+                    cameraType = CameraType.Following;
+                    break;
+                case CameraType.Following:
+                    cameraType = CameraType.Moving;
+                    break;
+                default:
+                    cameraType = CameraType.Stale;
+                    break;
+            }
+        }
+
+        private void MoveModels()
+        {
+            animationTick = (animationTick + 1) % Config.FullTicks;
+            var newPivot = rotatingModel.Pivot + Vector3.UnitX * 2.0f * MathF.PI / Config.FullTicks;
+            rotatingModel.Pivot = (newPivot.X > MathF.PI * 2)? Vector3.Zero : newPivot;
+
+            float phi = ((float)animationTick / Config.FullTicks) * 2.0f * MathF.PI;
+            float x = Config.MovingCircleRadius * MathF.Cos(phi);
+            float z = Config.MovingCircleRadius * MathF.Sin(phi);
+            movingModelPosition = new Vector3(x, movingModelPosition.Y, z);
+            movingModel.Translation = movingModelPosition;
         }
 
         public void Draw()
         {
+            lockmap.LockBits();
+            Drawing.ClearLB(lockmap, Config.BackGroundColor);
+            lockmap.UnlockBits();
             Render();
         }
-
+        
         private void Render()
         {
+            Camera curCam = GetCamera();
             List<Triangle> triangles = new List<Triangle>();
             foreach(var model in models)
             {
@@ -47,38 +90,51 @@ namespace CPU_Renderer.Rendering
             {
                 tri.CastToScreen(pictureBox.Width, pictureBox.Height);
             }
+            triangles = triangles.Where(t => t.IsOnScreen(pictureBox.Width, pictureBox.Height)).ToList();
 
             foreach (var tri in triangles)
             {
                 tri.pixels = Rasterization.RasterizeWithScanLine(tri);
             }
 
+            Drawing.InitZBuffer(pictureBox.Width, pictureBox.Height);
             lockmap.LockBits();
             foreach (var triangle in triangles)
             {
-                //Drawing.DrawTriangleEdges(lockmap, triangle);
-                Drawing.DrawTriangle(lockmap, triangle);
+                Drawing.DrawTriangleEdges(lockmap, triangle);
+                //Drawing.DrawTriangle(lockmap, triangle);
             }
             lockmap.UnlockBits();
         }
 
         private void InitializeModels()
         {
+            movingModel = new Cube(Color.Blue, movingModelPosition, movingModelSize, new Vector3(0, 0, 0));
+            rotatingModel = new Cube(Color.Red, new Vector3(2.0f, 2.0f, -3.0f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
             models = new List<Model>()
             {
-                new Cube(Color.Red, new Vector3(1.0f, 0.0f, 0.0f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0,0,0)),
-                new Cube(Color.Green, new Vector3(0.5f, 0.5f, -1f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0,0,0)),
+                rotatingModel,
+                movingModel,
+                new Sphere(Color.Green, new Vector3(0,0,0), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0)),
             };
         }
 
-        private void InitializeCamera() 
+        private Camera GetCamera()
         {
-            curCam = new Camera()
+            Camera curCam = new Camera();
+            switch (cameraType)
             {
-                Position = new Vector3(0.0f, 0.0f, 3.0f),
-                Target = new Vector3(0.0f, 0.0f, 0.0f),
-                UpVector = new Vector3(0, 1, 0)
-            };
+                case CameraType.Stale:
+                    curCam = Camera.GetStaleCamera();
+                break;
+                case CameraType.Following:
+                    curCam = Camera.GetFollowingCamera(movingModelPosition);
+                break;
+                case CameraType.Moving:
+                    curCam = Camera.GetMovingCamera(movingModelPosition);
+                break;
+            }
+            return curCam;
         }
     }
 }

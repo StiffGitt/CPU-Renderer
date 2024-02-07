@@ -20,8 +20,8 @@ namespace CPU_Renderer.Rendering
 
             screenPos = new Vector4()
             {
-                X = ((1 - screenPos.X) * width) / 2,
-                Y = ((1 - screenPos.Y) * height) / 2,
+                X = ((1 + screenPos.X) * width) / 2,
+                Y = ((1 + screenPos.Y) * height) / 2,
                 Z = (P.Z + 1) / 2,
                 W = screenPos.W
             };
@@ -30,6 +30,11 @@ namespace CPU_Renderer.Rendering
             {
                 P = screenPos, N = N, Color = Color
             };
+        }
+
+        public bool IsOnScreen(int width, int height)
+        {
+            return P.X > 0 && P.X < width && P.Y > 0 && P.Y < height;
         }
     }
 }

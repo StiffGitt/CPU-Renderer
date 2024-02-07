@@ -9,6 +9,8 @@ namespace CPU_Renderer
         {
             InitializeComponent();
             this.scene = new Scene(pictureBox);
+            ConfigurationForm configurationForm = new ConfigurationForm(this);
+            configurationForm.Show();
             Draw();
         }
 
@@ -19,5 +21,20 @@ namespace CPU_Renderer
             pictureBox.Refresh();
         }
 
+        public void ToggleAnimation()
+        {
+            animationTimer.Enabled = !animationTimer.Enabled;
+        }
+        public void ChangeCamera()
+        {
+            scene.ChangeCamera();
+            Draw();
+        }
+        
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            scene.DoTick();
+            Draw();
+        }
     }
 }

@@ -29,6 +29,8 @@ namespace CPU_Renderer.Rendering.Models
             foreach(var triangle in mesh)
             {
                 var P = triangle.A.P.ApplyMatrix(MVP);
+                if (P.W == 0)
+                    continue;
                 var A = new Pixel()
                 {
                     P = P / P.W,
@@ -37,6 +39,8 @@ namespace CPU_Renderer.Rendering.Models
                 };
 
                 P = triangle.B.P.ApplyMatrix(MVP);
+                if (P.W == 0)
+                    continue;
                 var B = new Pixel()
                 {
                     P = P / P.W,
@@ -45,6 +49,8 @@ namespace CPU_Renderer.Rendering.Models
                 };
 
                 P = triangle.C.P.ApplyMatrix(MVP);
+                if (P.W == 0)
+                    continue;
                 var C = new Pixel()
                 {
                     P = P / P.W,
@@ -71,9 +77,9 @@ namespace CPU_Renderer.Rendering.Models
 
         protected Matrix4x4 GetViewMatrix(Vector3 CameraPos, Vector3 CameraTarget, Vector3 UpVector)
         {
-            Vector3 D = CameraPos - CameraTarget;
-            Vector3 R = Vector3.Cross(UpVector, D);
-            Vector3 U = Vector3.Cross(D, R);
+            Vector3 D = Vector3.Normalize(CameraPos - CameraTarget);
+            Vector3 R = Vector3.Normalize(Vector3.Cross(UpVector, D));
+            Vector3 U = Vector3.Normalize(Vector3.Cross(D, R));
             Matrix4x4 V1 = new Matrix4x4(
                 R.X, R.Y, R.Z, 0,
                 U.X, U.Y, U.Z, 0,

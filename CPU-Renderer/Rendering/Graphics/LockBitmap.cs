@@ -6,13 +6,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPU_Renderer.Rendering
+namespace CPU_Renderer.Rendering.Graphics
 {
     // https://www.codeproject.com/Tips/240428/Work-with-Bitmaps-Faster-in-Csharp-3
     public class LockBitmap
     {
         Bitmap source = null;
-        IntPtr Iptr = IntPtr.Zero;
+        nint Iptr = nint.Zero;
         BitmapData bitmapData = null;
 
         public byte[] Pixels { get; set; }
@@ -43,7 +43,7 @@ namespace CPU_Renderer.Rendering
                 Rectangle rect = new Rectangle(0, 0, Width, Height);
 
                 // get source bitmap pixel format size
-                Depth = System.Drawing.Bitmap.GetPixelFormatSize(source.PixelFormat);
+                Depth = Image.GetPixelFormatSize(source.PixelFormat);
 
                 // Check if bpp (Bits Per Pixel) is 8, 24, or 32
                 if (Depth != 8 && Depth != 24 && Depth != 32)
@@ -102,7 +102,7 @@ namespace CPU_Renderer.Rendering
             int cCount = Depth / 8;
 
             // Get start index of the specified pixel
-            int i = ((y * Width) + x) * cCount;
+            int i = (y * Width + x) * cCount;
 
             if (i > Pixels.Length - cCount)
                 throw new IndexOutOfRangeException();
@@ -143,7 +143,7 @@ namespace CPU_Renderer.Rendering
             int cCount = Depth / 8;
 
             // Get start index of the specified pixel
-            int i = ((y * Width) + x) * cCount;
+            int i = (y * Width + x) * cCount;
 
             if (Depth == 32) // For 32 bpp set Red, Green, Blue and Alpha
             {
