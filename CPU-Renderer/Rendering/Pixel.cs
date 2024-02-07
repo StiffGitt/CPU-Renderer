@@ -20,7 +20,7 @@ namespace CPU_Renderer.Rendering
 
             screenPos = new Vector4()
             {
-                X = ((screenPos.X + 1) * width) / 2,
+                X = ((1 - screenPos.X) * width) / 2,
                 Y = ((1 - screenPos.Y) * height) / 2,
                 Z = (P.Z + 1) / 2,
                 W = screenPos.W

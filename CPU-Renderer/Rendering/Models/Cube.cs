@@ -9,7 +9,7 @@ namespace CPU_Renderer.Rendering.Models
 {
     public class Cube : Model
     {
-        private const int wallTriCount = 10;
+        private const int wallTriCount = 2;
         private Color color;
         private List<Triangle> mesh;
 

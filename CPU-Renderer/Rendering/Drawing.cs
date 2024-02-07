@@ -102,5 +102,13 @@ namespace CPU_Renderer.Rendering
             Drawing.DrawLine(lb, triangle.A.Color, points[0], points[1]);
             Drawing.DrawLine(lb, triangle.A.Color, points[1], points[2]);
         }
+
+        public static void DrawTriangle(LockBitmap lb, Triangle triangle)
+        {
+            Parallel.ForEach(triangle.pixels, p =>
+            {
+                lb.SetPixel((int)p.P.X, lb.Height - (int)p.P.Y, p.Color);
+            });
+        }
     }
 }
