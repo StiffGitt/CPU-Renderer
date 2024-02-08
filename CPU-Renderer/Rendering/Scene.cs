@@ -6,6 +6,7 @@ using CPU_Renderer.Rendering.PixelOperations;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -15,12 +16,12 @@ namespace CPU_Renderer.Rendering
 {
     public class Scene
     {
-        private PictureBox pictureBox;
         private int animationTick = 0;
         private Renderer renderer;
-        public Model rotatingModel;
-        public Model rotatingModel2;
-        public Model movingModel;
+        private Model rotatingModel;
+        private Model rotatingModel2;
+        private Model movingModel;
+        private TravellingLight travellingLight;
         private Vector3 movingModelPosition = new Vector3(Config.MovingCircleRadius, 0.0f, 0.0f);
         private Vector3 movingModelSize = new Vector3(0.1f, 0.1f, 0.1f);
         private CameraType cameraType = CameraType.Stale;
@@ -31,7 +32,6 @@ namespace CPU_Renderer.Rendering
             pictureBox.Image = bitmap;
             renderer = new Renderer();
             renderer.lockmap = new LockBitmap(bitmap);
-            this.pictureBox = pictureBox;
             InitializeModels();
             InitializeLights();
             Draw();
@@ -39,7 +39,7 @@ namespace CPU_Renderer.Rendering
 
         public void DoTick()
         {
-            MoveModels();
+            MoveScene();
         }
 
         public void ChangeCamera()
@@ -58,7 +58,7 @@ namespace CPU_Renderer.Rendering
             }
         }
 
-        private void MoveModels()
+        private void MoveScene()
         {
             animationTick = (animationTick + 1) % Config.FullTicks;
             var newPivot = rotatingModel.Pivot + Vector3.UnitX * 2.0f * MathF.PI / Config.FullTicks;
@@ -72,6 +72,8 @@ namespace CPU_Renderer.Rendering
             float z = Config.MovingCircleRadius * MathF.Sin(phi);
             movingModelPosition = new Vector3(x, movingModelPosition.Y, z);
             movingModel.Translation = movingModelPosition;
+
+            travellingLight.Move();
         }
 
         public void Draw()
@@ -86,9 +88,9 @@ namespace CPU_Renderer.Rendering
 
         private void InitializeModels()
         {
-            movingModel = new Sphere(Material.Diffusive, Color.Blue, movingModelPosition, movingModelSize, new Vector3(0, 0, 0));
-            rotatingModel = new Sphere(Material.Specular, Color.Green, new Vector3(0, 0, 0), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
-            rotatingModel2 = new Cube(Material.Diffusive, Color.Red, new Vector3(2.0f, 2.0f, -3.0f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
+            movingModel = new Sphere(Material.Diffusive, Color.FromArgb(4, 4, 255), movingModelPosition, movingModelSize, new Vector3(0, 0, 0));
+            rotatingModel = new Sphere(Material.Specular, Color.FromArgb(10, 125, 10), new Vector3(0, 0, 0), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
+            rotatingModel2 = new Cube(Material.Diffusive, Color.FromArgb(255, 2, 2), new Vector3(2.0f, 2.0f, -3.0f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
             
             renderer.models = new List<Model>()
             {
@@ -100,13 +102,18 @@ namespace CPU_Renderer.Rendering
 
         private void InitializeLights()
         {
-            renderer.lights = new List<Light>();
-            var staleLight = new Light()
+            travellingLight = new TravellingLight(new Vector3(-4.0f, -10.0f, 0.0f), new Vector3(0.0f, -4.0f, 0.0f),
+                new Vector3(125, 125, 0), new Vector3(125, 125, 0));
+            renderer.lights = new List<Light>()
             {
-                Diffuse = new Vector3(125, 125, 125),
-                Position = new Vector3(1.0f, 1.0f, 1.0f),
+                new Light()
+                { 
+                    Position = new Vector3(1.0f, 1.0f, 1.0f),
+                    Diffuse = new Vector3(125, 125, 125),
+                },
+                travellingLight
             };
-            renderer.lights.Add(staleLight);
+
         }
 
         private Camera GetCamera()

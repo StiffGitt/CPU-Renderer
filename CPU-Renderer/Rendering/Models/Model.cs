@@ -27,7 +27,6 @@ namespace CPU_Renderer.Rendering.Models
             Matrix4x4.Invert(Matrix4x4.Transpose(Model), out var MNormal);
 
             var transformedMesh = new List<Triangle>();
-            //Parallel.ForEach(mesh, triangle =>
             foreach(var triangle in mesh)
             {
                 var WP = triangle.A.P.ApplyMatrix(Model);

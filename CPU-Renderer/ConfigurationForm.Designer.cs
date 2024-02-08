@@ -30,19 +30,24 @@
         {
             components = new System.ComponentModel.Container();
             groupBox1 = new GroupBox();
+            fogTrackBar = new TrackBar();
+            fpsLabel = new Label();
+            label1 = new Label();
             shadingComboBox = new ComboBox();
             gridModeCheckBox = new CheckBox();
             backFaceCheckBox = new CheckBox();
             changeCameraButton = new Button();
             animationCheckBox = new CheckBox();
             fpsTimer = new System.Windows.Forms.Timer(components);
-            label1 = new Label();
-            fpsLabel = new Label();
+            label2 = new Label();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)fogTrackBar).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(fogTrackBar);
             groupBox1.Controls.Add(fpsLabel);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(shadingComboBox);
@@ -56,6 +61,35 @@
             groupBox1.Size = new Size(184, 361);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
+            // 
+            // fogTrackBar
+            // 
+            fogTrackBar.Location = new Point(6, 190);
+            fogTrackBar.Maximum = 60;
+            fogTrackBar.Name = "fogTrackBar";
+            fogTrackBar.Size = new Size(165, 45);
+            fogTrackBar.TabIndex = 7;
+            fogTrackBar.ValueChanged += fogTrackBar_ValueChanged;
+            // 
+            // fpsLabel
+            // 
+            fpsLabel.AutoSize = true;
+            fpsLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            fpsLabel.Location = new Point(6, 338);
+            fpsLabel.Name = "fpsLabel";
+            fpsLabel.Size = new Size(30, 19);
+            fpsLabel.TabIndex = 6;
+            fpsLabel.Text = "fps:";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            label1.Location = new Point(6, 112);
+            label1.Name = "label1";
+            label1.Size = new Size(61, 19);
+            label1.TabIndex = 5;
+            label1.Text = "Shading:";
             // 
             // shadingComboBox
             // 
@@ -115,25 +149,15 @@
             fpsTimer.Interval = 1000;
             fpsTimer.Tick += fpsTimer_Tick;
             // 
-            // label1
+            // label2
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(6, 112);
-            label1.Name = "label1";
-            label1.Size = new Size(61, 19);
-            label1.TabIndex = 5;
-            label1.Text = "Shading:";
-            // 
-            // fpsLabel
-            // 
-            fpsLabel.AutoSize = true;
-            fpsLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            fpsLabel.Location = new Point(6, 338);
-            fpsLabel.Name = "fpsLabel";
-            fpsLabel.Size = new Size(30, 19);
-            fpsLabel.TabIndex = 6;
-            fpsLabel.Text = "fps:";
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            label2.Location = new Point(6, 168);
+            label2.Name = "label2";
+            label2.Size = new Size(35, 19);
+            label2.TabIndex = 8;
+            label2.Text = "Fog:";
             // 
             // ConfigurationForm
             // 
@@ -147,6 +171,7 @@
             Text = "Configuration";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)fogTrackBar).EndInit();
             ResumeLayout(false);
         }
 
@@ -161,5 +186,7 @@
         private System.Windows.Forms.Timer fpsTimer;
         private Label fpsLabel;
         private Label label1;
+        private TrackBar fogTrackBar;
+        private Label label2;
     }
 }

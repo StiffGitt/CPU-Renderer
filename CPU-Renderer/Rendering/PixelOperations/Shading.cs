@@ -106,6 +106,9 @@ namespace CPU_Renderer.Rendering.PixelOperations
             // Ambient
             I += p.Material.K_a * Light.Ambient;
 
+            float fogFactor = CalcFogFactor(p, camPos);
+            I = Vector3.Lerp(I, Vector3.One, fogFactor);
+
             if (I.X > 1)
                 I.X = 1;
             if (I.Y > 1)
@@ -115,5 +118,21 @@ namespace CPU_Renderer.Rendering.PixelOperations
 
             return I;
         }
+
+        private static float CalcFogFactor(Pixel p, Vector3 camPos)
+        {
+            float intesity = Config.FogIntensity;
+            if (intesity == 0)
+                return 1.0f;
+
+            float gradient = intesity * intesity - 5 * intesity + 6;
+            float dist = (camPos - p.WP).Length();
+
+            float fog = MathF.Exp(-MathF.Pow(dist / gradient, 4));
+            fog = Math.Clamp(fog, 0.0f, 1.0f);
+
+            return fog;
+        }
     }
+    
 }

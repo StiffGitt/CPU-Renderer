@@ -13,8 +13,8 @@ namespace CPU_Renderer.Rendering.Models
         private Color color;
         private List<Triangle> mesh;
         private float r = 1.0f;
-        public static int parallelsCount = 10;
-        public static int meridiansCount = 10;
+        public static int parallelsCount = 20;
+        public static int meridiansCount = 20;
 
         public Sphere(Material material, Color color, Vector3 translation, Vector3 scale, Vector3 pivot)
         {
@@ -42,11 +42,7 @@ namespace CPU_Renderer.Rendering.Models
 
                 for (int j = 0;  j < meridiansCount; j++)
                 {
-                    float mAngle = mStep * j, mAngleNext = mStep * (j + 1);
-                    if (mAngleNext == 2 * MathF.PI)
-                    {
-                        mAngleNext = 2 * MathF.PI * 359.0f / 360.0f;
-                    }
+                    float mAngle = mStep * j, mAngleNext = mStep * ((j + 1) % meridiansCount);
                     Vector4 P1 = new Vector4(
                         r * MathF.Sin(pAngle) * MathF.Cos(mAngle), r * MathF.Cos(pAngle), r * MathF.Sin(pAngle) * MathF.Sin(mAngle), 1);
                     Vector4 P2 = new Vector4(

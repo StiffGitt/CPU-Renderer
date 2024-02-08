@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.Intrinsics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,8 +29,6 @@ namespace CPU_Renderer.Rendering.PixelOperations
             return (float)(b.X - a.X) / (b.Y - a.Y);
         }
 
-        
-
         public static List<Pixel> RasterizeWithScanLine(Triangle triangle)
         {
             List<Pixel> pixels = new List<Pixel>();
@@ -42,6 +41,7 @@ namespace CPU_Renderer.Rendering.PixelOperations
             List<AETev> AET = new List<AETev>();
             int[] sortedPoints = points.Select((x, i) => new KeyValuePair<Point, int>(x, i))
                 .OrderBy(x => x.Key.Y).Select(x => x.Value).ToArray();
+
             int ymin = points[sortedPoints[0]].Y; int ymax = points[sortedPoints[sortedPoints.Length - 1]].Y;
             int lastFound = -1, prev, next;
             for (int y = ymin + 1; y <= ymax; y++)
@@ -66,8 +66,10 @@ namespace CPU_Renderer.Rendering.PixelOperations
 
                 AET = AET.OrderBy(x => x.x).ToList();
 
-                for (int i = 0; i < AET.Count - 1; i += 2)
+                for (int i = 0; i < AET.Count; i += 2)
                 {
+                    if (i == AET.Count - 1)
+                        continue;
                     for (int x = (int)AET[i].x; x < AET[i + 1].x; x++)
                     {
                         var pf = new PointF(x, y);
@@ -97,5 +99,6 @@ namespace CPU_Renderer.Rendering.PixelOperations
             }
             return pixels;
         }
+
     }
 }

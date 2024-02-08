@@ -16,5 +16,6 @@ namespace CPU_Renderer.Rendering.Configurations
         public static bool BackFaceCulling = false;
         public static bool GridMode = false;
         public static ShadingTypes ShadingType = ShadingTypes.Constant;
+        public static float FogIntensity = 1.0f;
     }
 }

@@ -49,10 +49,14 @@ namespace CPU_Renderer.Rendering
                 tri.pixels = Rasterization.RasterizeWithScanLine(tri);
             });
 
-            Parallel.ForEach(triangles, tri =>
+            //Parallel.ForEach(triangles, tri =>
+            //{
+            //    Shading.DoShading(tri, lights, curCam.Position);
+            //});
+            foreach (var tri in triangles)
             {
                 Shading.DoShading(tri, lights, curCam.Position);
-            });
+            }
 
             Drawing.InitZBuffer(lockmap.Width, lockmap.Height);
             lockmap.LockBits();

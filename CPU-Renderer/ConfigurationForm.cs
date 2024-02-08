@@ -59,7 +59,7 @@ namespace CPU_Renderer
                     Config.ShadingType = ShadingTypes.Gouraud;
                     break;
                 case 2:
-                    Config.ShadingType = ShadingTypes.Gouraud;
+                    Config.ShadingType = ShadingTypes.Phong;
                     break;
             }
             mainForm.Draw();
@@ -69,6 +69,12 @@ namespace CPU_Renderer
         {
             fpsLabel.Text = $"fps: {FrameCount}";
             FrameCount = 0;
+        }
+
+        private void fogTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            Config.FogIntensity = (100 - (float)fogTrackBar.Value) / 100.0f;
+            mainForm.Draw();
         }
     }
 }
