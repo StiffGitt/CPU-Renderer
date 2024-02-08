@@ -15,6 +15,7 @@ namespace CPU_Renderer
     public partial class ConfigurationForm : System.Windows.Forms.Form
     {
         private Form mainForm;
+        public static int FrameCount = 0;
         public ConfigurationForm(Form form)
         {
             InitializeComponent();
@@ -49,7 +50,7 @@ namespace CPU_Renderer
 
         private void shadingComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch(shadingComboBox.SelectedIndex)
+            switch (shadingComboBox.SelectedIndex)
             {
                 case 0:
                     Config.ShadingType = ShadingTypes.Constant;
@@ -62,6 +63,12 @@ namespace CPU_Renderer
                     break;
             }
             mainForm.Draw();
+        }
+
+        private void fpsTimer_Tick(object sender, EventArgs e)
+        {
+            fpsLabel.Text = $"fps: {FrameCount}";
+            FrameCount = 0;
         }
     }
 }

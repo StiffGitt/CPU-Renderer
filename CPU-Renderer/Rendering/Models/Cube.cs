@@ -32,13 +32,13 @@ namespace CPU_Renderer.Rendering.Models
             // Back wall
             TriangulateFrontBack(new Vector4(0, 0, 0, 1), new Vector4(0, 0, -1, 0));
             // Left wall
-            TriangulateLeftRight(new Vector4(0, 0, 0, 1), new Vector4(1, 0, 0, 0));
+            TriangulateLeftRight(new Vector4(0, 0, 0, 1), new Vector4(-1, 0, 0, 0));
             // Right wall
-            TriangulateLeftRight(new Vector4(1, 0, 0, 1), new Vector4(-1, 0, 0, 0));
+            TriangulateLeftRight(new Vector4(1, 0, 0, 1), new Vector4(1, 0, 0, 0));
             // Bottom wall
-            TriangulateBottomUp(new Vector4(0, 0, 0, 1), new Vector4(0, 1, 0, 0));
+            TriangulateBottomUp(new Vector4(0, 0, 0, 1), new Vector4(0, -1, 0, 0));
             // Up wall
-            TriangulateBottomUp(new Vector4(0, 1, 0, 1), new Vector4(0, -1, 0, 0));
+            TriangulateBottomUp(new Vector4(0, 1, 0, 1), new Vector4(0, 1, 0, 0));
         }
 
         private void TriangulateFrontBack(Vector4 start, Vector4 N)

@@ -15,14 +15,12 @@ namespace CPU_Renderer.Rendering
 {
     public class Scene
     {
-        private LockBitmap lockmap;
         private PictureBox pictureBox;
-        private List<Model> models;
-        private List<Light> lights;
         private int animationTick = 0;
-        private Model rotatingModel;
-        private Model rotatingModel2;
-        private Model movingModel;
+        private Renderer renderer;
+        public Model rotatingModel;
+        public Model rotatingModel2;
+        public Model movingModel;
         private Vector3 movingModelPosition = new Vector3(Config.MovingCircleRadius, 0.0f, 0.0f);
         private Vector3 movingModelSize = new Vector3(0.1f, 0.1f, 0.1f);
         private CameraType cameraType = CameraType.Stale;
@@ -31,7 +29,8 @@ namespace CPU_Renderer.Rendering
         {
             Bitmap bitmap = new Bitmap(pictureBox.Size.Width, pictureBox.Size.Height);
             pictureBox.Image = bitmap;
-            this.lockmap = new LockBitmap(bitmap);
+            renderer = new Renderer();
+            renderer.lockmap = new LockBitmap(bitmap);
             this.pictureBox = pictureBox;
             InitializeModels();
             InitializeLights();
@@ -77,52 +76,13 @@ namespace CPU_Renderer.Rendering
 
         public void Draw()
         {
-            lockmap.LockBits();
-            Drawing.ClearLB(lockmap, Config.BackGroundColor);
-            lockmap.UnlockBits();
-            Render();
+            renderer.ClearMap();
+            renderer.curCam = GetCamera();
+            renderer.Render();
+            ConfigurationForm.FrameCount++;
         }
         
-        private void Render()
-        {
-            Camera curCam = GetCamera();
-            List<Triangle> triangles = new List<Triangle>();
-            foreach(var model in models)
-            {
-                triangles.AddRange(model.CalculateModelMesh(curCam.Position, curCam.Target, curCam.UpVector, Projection.fieldOfView,
-                    Projection.aspectRatio, Projection.nearPlane, Projection.farPlane));
-            };
-
-            if(Config.BackFaceCulling)
-                triangles = triangles.Where(t => !t.BackFaceCulling(curCam.Position)).ToList();
-
-            foreach(var tri in triangles)
-            {
-                tri.CastToScreen(pictureBox.Width, pictureBox.Height);
-            }
-            triangles = triangles.Where(t => t.IsOnScreen(pictureBox.Width, pictureBox.Height)).ToList();
-
-            foreach (var tri in triangles)
-            {
-                tri.pixels = Rasterization.RasterizeWithScanLine(tri);
-            }
-
-            foreach (var tri in triangles)
-            {
-                Shading.DoShading(tri, lights, curCam.Position);
-            }
-
-            Drawing.InitZBuffer(pictureBox.Width, pictureBox.Height);
-            lockmap.LockBits();
-            foreach (var triangle in triangles)
-            {
-                if(Config.GridMode)
-                    Drawing.DrawTriangleEdges(lockmap, triangle);
-                else
-                    Drawing.DrawTriangle(lockmap, triangle);
-            }
-            lockmap.UnlockBits();
-        }
+       
 
         private void InitializeModels()
         {
@@ -130,7 +90,7 @@ namespace CPU_Renderer.Rendering
             rotatingModel = new Sphere(Material.Specular, Color.Green, new Vector3(0, 0, 0), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
             rotatingModel2 = new Cube(Material.Diffusive, Color.Red, new Vector3(2.0f, 2.0f, -3.0f), new Vector3(0.25f, 0.25f, 0.25f), new Vector3(0, 0, 0));
             
-            models = new List<Model>()
+            renderer.models = new List<Model>()
             {
                 rotatingModel,
                 movingModel,
@@ -140,13 +100,13 @@ namespace CPU_Renderer.Rendering
 
         private void InitializeLights()
         {
-            lights = new List<Light>();
+            renderer.lights = new List<Light>();
             var staleLight = new Light()
             {
                 Diffuse = new Vector3(125, 125, 125),
                 Position = new Vector3(1.0f, 1.0f, 1.0f),
             };
-            lights.Add(staleLight);
+            renderer.lights.Add(staleLight);
         }
 
         private Camera GetCamera()

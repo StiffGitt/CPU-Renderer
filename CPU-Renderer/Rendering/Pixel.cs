@@ -42,9 +42,8 @@ namespace CPU_Renderer.Rendering
 
         public bool IsBackFace(Vector3 camPos)
         {
-            Vector3 P3 = new Vector3(P.X, P.Y, P.Z);
             Vector3 N3 = new Vector3(N.X, N.Y, N.Z);
-            P3 = P3 - camPos;
+            Vector3 P3 = WP - camPos;
             return Vector3.Dot(P3, N3) > 0;
         }
     }

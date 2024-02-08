@@ -45,6 +45,7 @@
             // 
             // animationTimer
             // 
+            animationTimer.Interval = 1;
             animationTimer.Tick += timer1_Tick;
             // 
             // Form

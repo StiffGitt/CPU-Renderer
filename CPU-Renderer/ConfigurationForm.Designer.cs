@@ -28,17 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             groupBox1 = new GroupBox();
             shadingComboBox = new ComboBox();
             gridModeCheckBox = new CheckBox();
             backFaceCheckBox = new CheckBox();
             changeCameraButton = new Button();
             animationCheckBox = new CheckBox();
+            fpsTimer = new System.Windows.Forms.Timer(components);
+            label1 = new Label();
+            fpsLabel = new Label();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(fpsLabel);
+            groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(shadingComboBox);
             groupBox1.Controls.Add(gridModeCheckBox);
             groupBox1.Controls.Add(backFaceCheckBox);
@@ -54,9 +60,9 @@
             // shadingComboBox
             // 
             shadingComboBox.FormattingEnabled = true;
-            shadingComboBox.Location = new Point(12, 88);
+            shadingComboBox.Location = new Point(6, 134);
             shadingComboBox.Name = "shadingComboBox";
-            shadingComboBox.Size = new Size(121, 23);
+            shadingComboBox.Size = new Size(126, 23);
             shadingComboBox.TabIndex = 4;
             shadingComboBox.SelectedIndexChanged += shadingComboBox_SelectedIndexChanged;
             // 
@@ -84,7 +90,7 @@
             // 
             // changeCameraButton
             // 
-            changeCameraButton.Location = new Point(12, 117);
+            changeCameraButton.Location = new Point(6, 88);
             changeCameraButton.Name = "changeCameraButton";
             changeCameraButton.Size = new Size(126, 23);
             changeCameraButton.TabIndex = 1;
@@ -102,6 +108,32 @@
             animationCheckBox.Text = "Animation";
             animationCheckBox.UseVisualStyleBackColor = true;
             animationCheckBox.CheckedChanged += animationCheckBox_CheckedChanged;
+            // 
+            // fpsTimer
+            // 
+            fpsTimer.Enabled = true;
+            fpsTimer.Interval = 1000;
+            fpsTimer.Tick += fpsTimer_Tick;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            label1.Location = new Point(6, 112);
+            label1.Name = "label1";
+            label1.Size = new Size(61, 19);
+            label1.TabIndex = 5;
+            label1.Text = "Shading:";
+            // 
+            // fpsLabel
+            // 
+            fpsLabel.AutoSize = true;
+            fpsLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            fpsLabel.Location = new Point(6, 338);
+            fpsLabel.Name = "fpsLabel";
+            fpsLabel.Size = new Size(30, 19);
+            fpsLabel.TabIndex = 6;
+            fpsLabel.Text = "fps:";
             // 
             // ConfigurationForm
             // 
@@ -126,5 +158,8 @@
         private CheckBox backFaceCheckBox;
         private CheckBox gridModeCheckBox;
         private ComboBox shadingComboBox;
+        private System.Windows.Forms.Timer fpsTimer;
+        private Label fpsLabel;
+        private Label label1;
     }
 }
